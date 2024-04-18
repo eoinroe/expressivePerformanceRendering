@@ -150,8 +150,11 @@ N_EDGE_TYPE = len(GRAPH_KEYS) * 2
 
 batch_size = 1
 
-torch.cuda.set_device(args.device)
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# torch.cuda.set_device(args.device)
+# DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# use GPU if available, otherwise, use cpu
+# DEVICE = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+DEVICE = torch.device("cpu")
 
 if args.sessMode == 'train' and not args.resumeTraining:
     NET_PARAM = param.initialize_model_parameters_by_code(args.modelCode)
@@ -1046,11 +1049,12 @@ elif args.sessMode in ['test', 'testAll', 'testAllzero', 'encode', 'encodeAll', 
         # model_codes = ['prime', 'trill']
         filename = 'prime_' + args.modelCode + args.resume
         print('device is ', args.device)
-        torch.cuda.set_device(args.device)
-        if torch.cuda.is_available():
-            map_location = lambda storage, loc: storage.cuda()
-        else:
-            map_location = 'cpu'
+        # torch.cuda.set_device(args.device)
+        # if torch.cuda.is_available():
+        #     map_location = lambda storage, loc: storage.cuda()
+        # else:
+        #     map_location = 'cpu'
+        map_location = 'cpu'
         checkpoint = torch.load(filename, map_location=map_location)
         # args.start_epoch = checkpoint['epoch']
         # best_valid_loss = checkpoint['best_valid_loss']
